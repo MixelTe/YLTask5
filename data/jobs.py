@@ -17,3 +17,6 @@ class Jobs(SqlAlchemyBase):
     is_finished = sqlalchemy.Column(sqlalchemy.Boolean)
 
     leader = orm.relation('User')
+
+    def __repr__(self):
+        return f"<Job> {self.job}"
