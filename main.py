@@ -82,13 +82,13 @@ def logout():
 @app.route("/addjob", methods=['GET', 'POST'])
 @login_required
 def addjob():
-    form = JobForm()
+    form = JobForm().init()
     if form.validate_on_submit():
         job = Jobs(
             job=form.job.data,
             team_leader=form.team_leader.data,
             work_size=form.work_size.data,
-            collaborators=form.collaborators.data,
+            collaborators=",".join(map(str, form.collaborators.data)),
             start_date=form.start_date.data,
             end_date=form.end_date.data,
             is_finished=form.is_finished.data,
@@ -103,7 +103,7 @@ def addjob():
 @app.route("/editjob/<int:id>", methods=['GET', 'POST'])
 @login_required
 def editjob(id):
-    form = JobForm()
+    form = JobForm().init()
     db_sess = db_session.create_session()
     job = db_sess.query(Jobs).filter(Jobs.id == id, (Jobs.team_leader == current_user.id) | (current_user.id == 1)).first()
     if (not job):
@@ -112,7 +112,7 @@ def editjob(id):
         form.job.data = job.job
         form.team_leader.data = job.team_leader
         form.work_size.data = job.work_size
-        form.collaborators.data = job.collaborators
+        form.collaborators.data = list(map(int, job.collaborators.split(",")))
         form.start_date.data = job.start_date
         form.end_date.data = job.end_date
         form.is_finished.data = job.is_finished
@@ -120,7 +120,7 @@ def editjob(id):
         job.job = form.job.data
         job.team_leader = form.team_leader.data
         job.work_size = form.work_size.data
-        job.collaborators = form.collaborators.data
+        job.collaborators = ",".join(map(str, form.collaborators.data))
         job.start_date = form.start_date.data
         job.end_date = form.end_date.data
         job.is_finished = form.is_finished.data
