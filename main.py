@@ -1,5 +1,5 @@
-from flask import Flask, redirect, render_template
-from flask_login import LoginManager, login_required, login_user, logout_user
+from flask import Flask, abort, redirect, render_template, request
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from data import db_session
 from data.jobs import Jobs
 from data.users import User
@@ -98,6 +98,49 @@ def addjob():
         db_sess.commit()
         return redirect('/')
     return render_template('editjob.html', title='Adding a Job', form=form)
+
+
+@app.route("/editjob/<int:id>", methods=['GET', 'POST'])
+@login_required
+def editjob(id):
+    form = JobForm()
+    db_sess = db_session.create_session()
+    job = db_sess.query(Jobs).filter(Jobs.id == id, (Jobs.team_leader == current_user.id) | (current_user.id == 1)).first()
+    if (not job):
+        abort(404)
+    if request.method == "GET":
+        form.job.data = job.job
+        form.team_leader.data = job.team_leader
+        form.work_size.data = job.work_size
+        form.collaborators.data = job.collaborators
+        form.start_date.data = job.start_date
+        form.end_date.data = job.end_date
+        form.is_finished.data = job.is_finished
+    if form.validate_on_submit():
+        job.job = form.job.data
+        job.team_leader = form.team_leader.data
+        job.work_size = form.work_size.data
+        job.collaborators = form.collaborators.data
+        job.start_date = form.start_date.data
+        job.end_date = form.end_date.data
+        job.is_finished = form.is_finished.data
+        db_sess.commit()
+        return redirect('/')
+    return render_template('editjob.html', title='Editing a Job', form=form)
+
+
+@app.route('/deletejob/<int:id>')
+@login_required
+def news_delete(id):
+    db_sess = db_session.create_session()
+    job = db_sess.query(Jobs).filter(Jobs.id == id, (Jobs.team_leader == current_user.id) | (current_user.id == 1)).first()
+    if job:
+        db_sess.delete(job)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/')
+
 
 
 if __name__ == '__main__':

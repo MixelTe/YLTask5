@@ -2,36 +2,63 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="text-center">Works log</h1>
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center">Works log</h1>
+        </div>
+    </div>
+    {% if current_user.is_authenticated %}
+    <div class="row">
+        <div class="col text-center">
+            <a class="btn btn-success" href="/addjob" role="button">Add Job</a>
+        </div>
+    </div>
+    {% endif %}
     {% for job in jobs %}
-    <h1>Action #{{job.id}}</h1>
-    <table class="table">
-        <tr class="table-success">
-            <th>Title of activity</th>
-            <th>Team leader</th>
-            <th>Duration</th>
-            <th>List of collaborators</th>
-            <th>Is finished</th>
-        </tr>
-        <tr class="table-info">
-            <td class="w-auto">{{job.job}}</td>
-            <td>{{job.leader.name}} {{job.leader.surname}}</td>
-            <td>{{job.work_size}} hours</td>
-            <td>{{job.collaborators}}</td>
-            {% if job.is_finished %}
-            <td class="table-success">Is finished</td>
-            {% else %}
-            <td class="table-danger">Is not finished</td>
-            {% endif %}
-        </tr>
-        <colgroup class="border-0">
-            <col span="1" style="width: 40%;">
-            <col span="1" style="width: 15%;">
-            <col span="1" style="width: 15%;">
-            <col span="1" style="width: 15%;">
-            <col span="1" style="width: 10%;">
-        </colgroup>
-    </table>
+    <div class="row">
+        <div class="col-auto">
+            <h1>Action #{{job.id}}</h1>
+        </div>
+        {% if current_user.is_authenticated and (job.team_leader == current_user.id or current_user.id == 1) %}
+        <div class="col-auto">
+            <a class="btn btn-warning" href="./editjob/{{job.id}}" role="button">Edit Job</a>
+        </div>
+        <div class="col-auto">
+            <a class="btn btn-danger" href="./deletejob/{{job.id}}" role="button">Delete Job</a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table">
+                <tr class="table-success">
+                    <th>Title of activity</th>
+                    <th>Team leader</th>
+                    <th>Duration</th>
+                    <th>List of collaborators</th>
+                    <th>Is finished</th>
+                </tr>
+                <tr class="table-info">
+                    <td class="w-auto">{{job.job}}</td>
+                    <td>{{job.leader.name}} {{job.leader.surname}}</td>
+                    <td>{{job.work_size}} hours</td>
+                    <td>{{job.collaborators}}</td>
+                    {% if job.is_finished %}
+                    <td class="table-success">Is finished</td>
+                    {% else %}
+                    <td class="table-danger">Is not finished</td>
+                    {% endif %}
+                </tr>
+                <colgroup class="border-0">
+                    <col span="1" style="width: 40%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 10%;">
+                </colgroup>
+            </table>
+        </div>
+    </div>
     {% endfor %}
 </div>
 {% endblock %}
