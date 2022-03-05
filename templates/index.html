@@ -31,18 +31,25 @@
     <div class="row overflow-auto">
         <div class="col">
             <table class="table">
-                <tr class="table-success">
-                    <th>Title of activity</th>
+                <tr class="table-success text-center align-middle">
+                    <th class="text-start">Title of activity</th>
                     <th>Team leader</th>
                     <th>Duration</th>
                     <th>List of collaborators</th>
+                    <th>Hazard category</th>
                     <th>Is finished</th>
                 </tr>
-                <tr class="table-info">
-                    <td>{{job.job}}</td>
+                <tr class="table-info text-center align-middle">
+                    <td class="text-start">{{job.job}}</td>
                     <td>{{job.leader.name}} {{job.leader.surname}}</td>
                     <td>{{job.work_size}} hours</td>
                     <td>{{job.collaborators}}</td>
+                    <td>
+                        {% for category in job.categories %}
+                        {{ category.id }}
+                        {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
                     {% if job.is_finished %}
                     <td class="table-success">Is finished</td>
                     {% else %}
@@ -52,8 +59,9 @@
                 <colgroup class="border-0">
                     <col span="1" style="width: 40%;">
                     <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 6%;">
                     <col span="1" style="width: 15%;">
-                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 14%;">
                     <col span="1" style="width: 10%;">
                 </colgroup>
             </table>
