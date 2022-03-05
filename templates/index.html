@@ -8,7 +8,7 @@
         </div>
     </div>
     {% if current_user.is_authenticated %}
-    <div class="row">
+    <div class="row mb-3">
         <div class="col text-center">
             <a class="btn btn-success" href="/addjob" role="button">Add Job</a>
         </div>
@@ -21,14 +21,14 @@
         </div>
         {% if current_user.is_authenticated and (job.team_leader == current_user.id or current_user.id == 1) %}
         <div class="col-auto">
-            <a class="btn btn-warning" href="./editjob/{{job.id}}" role="button">Edit Job</a>
+            <a class="btn btn-warning" href="./editjob/{{job.id}}" role="button">Edit</a>
         </div>
         <div class="col-auto">
-            <a class="btn btn-danger" href="./deletejob/{{job.id}}" role="button">Delete Job</a>
+            <a class="btn btn-danger" href="./deletejob/{{job.id}}" role="button">Delete</a>
         </div>
         {% endif %}
     </div>
-    <div class="row">
+    <div class="row overflow-auto">
         <div class="col">
             <table class="table">
                 <tr class="table-success">
@@ -39,7 +39,7 @@
                     <th>Is finished</th>
                 </tr>
                 <tr class="table-info">
-                    <td class="w-auto">{{job.job}}</td>
+                    <td>{{job.job}}</td>
                     <td>{{job.leader.name}} {{job.leader.surname}}</td>
                     <td>{{job.work_size}} hours</td>
                     <td>{{job.collaborators}}</td>
