@@ -1,6 +1,8 @@
-from flask import Flask, abort, redirect, render_template, request
+from flask import Flask, abort, jsonify, make_response, redirect, render_template, request
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from data import db_session
+from api import jobs_api
+from api import users_api
 from data.departments import Department
 from data.jobs import Jobs
 from data.users import User
@@ -8,6 +10,7 @@ from forms.departments import DepartmentForm
 from forms.job import JobForm
 from forms.login import LoginForm
 from forms.register import RegisterForm
+from map import getMapUrlByGeocode
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -17,7 +20,33 @@ login_manager.init_app(app)
 
 def main():
     db_session.global_init("db/mars_explorer.db")
+    app.register_blueprint(jobs_api.blueprint)
+    app.register_blueprint(users_api.blueprint)
     app.run()
+
+
+@app.errorhandler(404)
+def not_found(error):
+    if (request.path.startswith("/api/")):
+        return make_response(jsonify({'error': 'Not found'}), 404)
+    else:
+        return render_template("error.html", title="404", text="Page not found"), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    if (request.path.startswith("/api/")):
+        return make_response(jsonify({'error': 'Internal Server Error'}), 500)
+    else:
+        return render_template("error.html", title="500", text="Internal Server Error"), 500
+
+
+@app.errorhandler(401)
+def unauthorized(error):
+    if (request.path.startswith("/api/")):
+        return make_response(jsonify({'error': 'Unauthorized'}), 401)
+    else:
+        return redirect("/login")
 
 
 @login_manager.user_loader
@@ -204,6 +233,16 @@ def delete_departments(id):
     else:
         abort(404)
     return redirect('/departments')
+
+
+@app.route("/users_show/<int:user_id>")
+def users_show(user_id):
+    session = db_session.create_session()
+    user = session.query(User).get(user_id)
+    if (not user):
+        abort(404)
+    img = getMapUrlByGeocode(user.city_from)
+    return render_template("users_show.html", title="Hometown", user=user, img=img)
 
 
 if __name__ == '__main__':
