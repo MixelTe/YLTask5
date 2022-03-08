@@ -1,8 +1,11 @@
+from datetime import timedelta
 from flask import Flask, abort, jsonify, make_response, redirect, render_template, request
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
+from flask_jwt_simple import JWTManager
 from data import db_session
 from api import jobs_api
 from api import users_api
+from api import login_api
 from data.departments import Department
 from data.jobs import Jobs
 from data.users import User
@@ -14,12 +17,15 @@ from map import getMapUrlByGeocode
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+app.config['JWT_SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
+jwt_manager = JWTManager(app)
 
 
 def main():
     db_session.global_init("db/mars_explorer.db")
+    app.register_blueprint(login_api.blueprint)
     app.register_blueprint(jobs_api.blueprint)
     app.register_blueprint(users_api.blueprint)
     app.run()
@@ -47,6 +53,21 @@ def unauthorized(error):
         return make_response(jsonify({'error': 'Unauthorized'}), 401)
     else:
         return redirect("/login")
+
+
+@jwt_manager.expired_token_loader
+def expired_token_loader():
+    return jsonify({'error': 'The JWT has expired'}), 401
+
+
+@jwt_manager.invalid_token_loader
+def invalid_token_loader(error):
+    return jsonify({'error': 'Invalid JWT'}), 401
+
+
+@jwt_manager.unauthorized_loader
+def unauthorized_loader(error):
+    return jsonify({'error': 'Missing Authorization Header'}), 401
 
 
 @login_manager.user_loader

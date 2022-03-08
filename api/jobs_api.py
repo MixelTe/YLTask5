@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import Blueprint, jsonify, request
+from flask_jwt_simple import jwt_required, get_jwt_identity
 from data import db_session
 from data.jobs import Jobs
 from data.users import User
@@ -25,6 +26,7 @@ def get_jobs():
 
 
 @blueprint.route('/api/jobs', methods=['POST'])
+@jwt_required
 def create_job():
     if not request.json:
         return jsonify({'error': 'Empty request'})
@@ -72,22 +74,30 @@ def get_job(id):
 
 
 @blueprint.route('/api/jobs/<int:id>', methods=['DELETE'])
+@jwt_required
 def delete_jobs(id):
     db_sess = db_session.create_session()
     job = db_sess.query(Jobs).get(id)
     if (not job):
         return jsonify({'error': 'Not found'})
+    userId = get_jwt_identity()
+    if (job.team_leader != userId and userId != 1):
+        return jsonify({'error': 'Forbidden'})
     db_sess.delete(job)
     db_sess.commit()
     return jsonify({'success': 'OK'})
 
 
 @blueprint.route('/api/jobs/<int:id>', methods=['PUT'])
+@jwt_required
 def edit_jobs(id):
     db_sess = db_session.create_session()
     job = db_sess.query(Jobs).get(id)
     if (not job):
         return jsonify({'error': 'Not found'})
+    userId = get_jwt_identity()
+    if (job.team_leader != userId and userId != 1):
+        return jsonify({'error': 'Forbidden'})
     if not request.json:
         return jsonify({'error': 'Empty request'})
     elif not any(key in request.json for key in JOBFIELDS):

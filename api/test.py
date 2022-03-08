@@ -118,3 +118,25 @@ def test4():
 
 
 # test4()
+# print(requests.post('http://localhost:5000/api/login',
+#                     json={
+#                         "email": "scott_chief@mars.org",
+#                         "password": "123",
+#                     }).json())
+# print(requests.post('http://localhost:5000/api/jobs',
+#                     json={
+#                         "id": 1,
+#                         "team_leader": 1,
+#                         "job": "Помыть полы",
+#                         "work_size": 1,
+#                         "collaborators": "2, 3, 4, 5",
+#                         "start_date": datetime.now().isoformat(),
+#                         "end_date": datetime.now().isoformat(),
+#                         "is_finished": False,
+#                     }, headers={
+#                         "Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDY3MzI4NjksImlhdCI6MTY0NjcyOTI2OSwibmJmIjoxNjQ2NzI5MjY5LCJzdWIiOjF9.10TCBgoybzY4KgIS2Q_saFUdzQY1hvvwxyZp8c1XyKQ"
+#                     }).json())
+print(requests.delete('http://localhost:5000/api/jobs/1',
+                    headers={
+                        "Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDY3MzI4NjksImlhdCI6MTY0NjcyOTI2OSwibmJmIjoxNjQ2NzI5MjY5LCJzdWIiOjJ9.vfuVGsFiXa_VjPsILRU0wQY0MPTAYJH93u_wOB67Efs"
+                    }).json())

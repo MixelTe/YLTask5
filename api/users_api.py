@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_simple import jwt_required, get_jwt_identity
 from data import db_session
 from data.users import User
 
@@ -69,6 +70,9 @@ def delete_user(id):
     user = db_sess.query(User).get(id)
     if (not user):
         return jsonify({'error': 'Not found'})
+    userId = get_jwt_identity()
+    if (user.id != userId and userId != 1):
+        return jsonify({'error': 'Forbidden'})
     db_sess.delete(user)
     db_sess.commit()
     return jsonify({'success': 'OK'})
@@ -81,6 +85,9 @@ def edit_user(id):
     fields = ("surname", "name", "age", "position", "speciality", "address", "email", "password")
     if (not user):
         return jsonify({'error': 'Not found'})
+    userId = get_jwt_identity()
+    if (user.id != userId and userId != 1):
+        return jsonify({'error': 'Forbidden'})
     if not request.json:
         return jsonify({'error': 'Empty request'})
     elif not any(key in request.json for key in fields):
