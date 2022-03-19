@@ -111,7 +111,6 @@ def edit_user(id):
             user.email = str(request.json["email"])
         if ("password" in request.json):
             user.set_password(str(request.json["password"]))
-        db_sess.add(user)
         db_sess.commit()
     except Exception:
         return jsonify({'error': 'Bad request'})

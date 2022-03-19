@@ -6,3 +6,4 @@ sqlalchemy
 werkzeug
 sqlalchemy_serializer
 flask_jwt_simple
+flask-restful

@@ -136,7 +136,6 @@ def test4():
 #                     }, headers={
 #                         "Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDY3MzI4NjksImlhdCI6MTY0NjcyOTI2OSwibmJmIjoxNjQ2NzI5MjY5LCJzdWIiOjF9.10TCBgoybzY4KgIS2Q_saFUdzQY1hvvwxyZp8c1XyKQ"
 #                     }).json())
-print(requests.delete('http://localhost:5000/api/jobs/1',
-                    headers={
-                        "Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDY3MzI4NjksImlhdCI6MTY0NjcyOTI2OSwibmJmIjoxNjQ2NzI5MjY5LCJzdWIiOjJ9.vfuVGsFiXa_VjPsILRU0wQY0MPTAYJH93u_wOB67Efs"
-                    }).json())
+print(requests.put('http://localhost:5000/api/v2/users/1', json={
+    "age": 1,
+}).json())
