@@ -130,7 +130,6 @@ def edit_jobs(id):
         if ("is_finished" in request.json):
             job.is_finished = bool(request.json["is_finished"])
 
-        db_sess.add(job)
         db_sess.commit()
     except Exception:
         return jsonify({'error': 'Bad request'})
