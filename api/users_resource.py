@@ -1,28 +1,9 @@
 from flask import jsonify
-from flask_restful import reqparse, abort, Api, Resource
+from flask_restful import abort, Resource
 from flask_jwt_simple import jwt_required, get_jwt_identity
 from data import db_session
 from data.users import User
-
-parser = reqparse.RequestParser()
-parser.add_argument("surname", required=True)
-parser.add_argument("name", required=True)
-parser.add_argument("age", required=True, type=int)
-parser.add_argument("position", required=True)
-parser.add_argument("speciality", required=True)
-parser.add_argument("address", required=True)
-parser.add_argument("email", required=True)
-parser.add_argument("password", required=True)
-
-parser_noreq = reqparse.RequestParser()
-parser_noreq.add_argument("surname")
-parser_noreq.add_argument("name")
-parser_noreq.add_argument("age", type=int)
-parser_noreq.add_argument("position")
-parser_noreq.add_argument("speciality")
-parser_noreq.add_argument("address")
-parser_noreq.add_argument("email")
-parser_noreq.add_argument("password")
+from api.parser import parser_user as parser, parser_user_noreq as parser_noreq
 
 
 def get_user_or_abort(user_id):

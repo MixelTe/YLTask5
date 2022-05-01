@@ -1,30 +1,13 @@
 from datetime import datetime
 from flask import jsonify
-from flask_restful import reqparse, abort, Resource
+from flask_restful import abort, Resource
 from flask_jwt_simple import jwt_required, get_jwt_identity
 from data import db_session
 from data.jobs import Jobs
 from data.users import User
+from api.parser import parser_job as parser, parser_job_noreq as parser_noreq
 
 Fields = ("id", "team_leader", "job", "work_size", "collaborators", "start_date", "end_date", "is_finished")
-
-parser = reqparse.RequestParser()
-parser.add_argument("team_leader", required=True, type=int)
-parser.add_argument("job", required=True)
-parser.add_argument("work_size", required=True, type=int)
-parser.add_argument("collaborators", required=True)
-parser.add_argument("start_date", required=True)
-parser.add_argument("end_date", required=True)
-parser.add_argument("is_finished", required=True)
-
-parser_noreq = reqparse.RequestParser()
-parser.add_argument("team_leader", type=int)
-parser.add_argument("job")
-parser.add_argument("work_size", type=int)
-parser.add_argument("collaborators")
-parser.add_argument("start_date")
-parser.add_argument("end_date")
-parser.add_argument("is_finished")
 
 
 def get_job_or_abort(job_id):
