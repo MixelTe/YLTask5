@@ -133,4 +133,4 @@ def edit_jobs(id):
         db_sess.commit()
     except Exception:
         return jsonify({'error': 'Bad request'})
-    return jsonify({'success': 'OK'})
+    return jsonify({'success': 'OK', "job_id": job.id})

@@ -196,3 +196,108 @@ def test5():
 
     print(requests.delete('http://localhost:5000/api/v2/users/abc', headers={'Authorization': f'Bearer {jwt}'}).json())
     printSep()
+
+
+def test6():
+    print(requests.get('http://localhost:5000/api/v2/jobs/1').json())
+    printSep()
+
+    print(requests.get('http://localhost:5000/api/v2/jobs/1000').json())
+    printSep()
+
+    print(requests.get('http://localhost:5000/api/v2/jobs/abc').json())
+    printSep()
+
+    print(requests.post('http://localhost:5000/api/v2/jobs').json())
+    printSep()
+
+    print(requests.post('http://localhost:5000/api/v2/jobs', json={
+        "team_leader": 1,
+        "job": "Помыть полы",
+        "work_size": 1,
+        "collaborators": "2, 3, 4, 5",
+        "start_date": datetime.now().isoformat(),
+        "end_date": datetime.now().isoformat(),
+        "is_finished": False,
+    }).json())
+    printSep()
+
+    user_id = requests.post('http://localhost:5000/api/v2/users', json={
+        "surname": "Test",
+        "name": "Test",
+        "age": 0,
+        "position": "Test",
+        "speciality": "Test",
+        "address": "Test",
+        "email": "Test",
+        "password": "Test",
+    }).json()["user_id"]
+    printSep()
+    jwt = requests.post('http://localhost:5000/api/login', json={
+        "email": "Test",
+        "password": "Test",
+    }).json()["jwt"]
+    print(jwt)
+    printSep()
+
+    job_id = requests.post('http://localhost:5000/api/v2/jobs', headers={'Authorization': f'Bearer {jwt}'}, json={
+        "team_leader": user_id,
+        "job": "Помыть полы",
+        "work_size": 1,
+        "collaborators": "2, 3, 4, 5",
+        "start_date": datetime.now().isoformat(),
+        "end_date": datetime.now().isoformat(),
+        "is_finished": False,
+    }).json()["job_id"]
+    print(job_id)
+    printSep()
+
+    print(requests.post('http://localhost:5000/api/v2/jobs', headers={'Authorization': f'Bearer {jwt}'}, json={
+        "team_leader": 100,
+        "job": "Помыть полы",
+        "work_size": 1,
+        "collaborators": "2, 3, 4, 5",
+        "start_date": datetime.now().isoformat(),
+        "end_date": datetime.now().isoformat(),
+        "is_finished": False,
+    }).json())
+    printSep()
+
+    print(requests.post('http://localhost:5000/api/v2/jobs', headers={'Authorization': f'Bearer {jwt}'}, json={
+        "team_leader": 1,
+        "work_size": 1,
+        "collaborators": "2, 3, 4, 5",
+        "start_date": datetime.now().isoformat(),
+        "end_date": datetime.now().isoformat(),
+        "is_finished": False,
+    }).json())
+    printSep()
+
+    print(requests.post('http://localhost:5000/api/v2/jobs', headers={'Authorization': f'Bearer {jwt}'}, json={
+        "team_leader": 1,
+        "job": "Помыть полы",
+        "work_size": "abc",
+        "collaborators": "2, 3, 4, 5",
+        "start_date": datetime.now().isoformat(),
+        "end_date": datetime.now().isoformat(),
+        "is_finished": False,
+    }).json())
+    printSep()
+
+
+    print(requests.delete(f'http://localhost:5000/api/v2/jobs/{job_id}', headers={'Authorization': f'Bearer {jwt}'}).json())
+    printSep()
+
+    print(requests.delete('http://localhost:5000/api/v2/jobs/1', headers={'Authorization': f'Bearer {jwt}'}).json())
+    printSep()
+
+    print(requests.delete('http://localhost:5000/api/v2/jobs/1000', headers={'Authorization': f'Bearer {jwt}'}).json())
+    printSep()
+
+    print(requests.delete('http://localhost:5000/api/v2/jobs/abc', headers={'Authorization': f'Bearer {jwt}'}).json())
+    printSep()
+
+    print(requests.delete('http://localhost:5000/api/v2/users/9', headers={'Authorization': f'Bearer {jwt}'}).json())
+    printSep()
+
+test6()
