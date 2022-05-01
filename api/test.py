@@ -117,82 +117,82 @@ def test4():
     printSep()
 
 
+def test5():
+    print(requests.get('http://localhost:5000/api/v2/users/1').json())
+    printSep()
 
-print(requests.get('http://localhost:5000/api/v2/users/1').json())
-printSep()
+    print(requests.get('http://localhost:5000/api/v2/users/1000').json())
+    printSep()
 
-print(requests.get('http://localhost:5000/api/v2/users/1000').json())
-printSep()
+    print(requests.get('http://localhost:5000/api/v2/users/abc').json())
+    printSep()
 
-print(requests.get('http://localhost:5000/api/v2/users/abc').json())
-printSep()
+    print(requests.post('http://localhost:5000/api/v2/users', json={
+        "surname": "Test",
+        "name": "Test",
+        "age": 0,
+        "position": "Test",
+        "speciality": "Test",
+        "address": "Test",
+        "email": "Test",
+        "password": "Test",
+    }).json())
+    printSep()
 
-print(requests.post('http://localhost:5000/api/v2/users', json={
-    "surname": "Test",
-    "name": "Test",
-    "age": 0,
-    "position": "Test",
-    "speciality": "Test",
-    "address": "Test",
-    "email": "Test",
-    "password": "Test",
-}).json())
-printSep()
+    print(requests.post('http://localhost:5000/api/v2/users', json={
+        "surname": "Test2",
+        "name": "Test2",
+        "age": 0,
+        "position": "Test2",
+        "speciality": "Test2",
+        "address": "Test2",
+        "email": "Test",
+        "password": "Test2",
+    }).json())
+    printSep()
 
-print(requests.post('http://localhost:5000/api/v2/users', json={
-    "surname": "Test2",
-    "name": "Test2",
-    "age": 0,
-    "position": "Test2",
-    "speciality": "Test2",
-    "address": "Test2",
-    "email": "Test",
-    "password": "Test2",
-}).json())
-printSep()
+    print(requests.post('http://localhost:5000/api/v2/users', json={
+        "surname": "Test3",
+        "name": "Test3",
+        "age": "abc",
+        "position": "Test3",
+        "speciality": "Test3",
+        "address": "Test3",
+        "email": "Test3",
+        "password": "Test3",
+    }).json())
+    printSep()
 
-print(requests.post('http://localhost:5000/api/v2/users', json={
-    "surname": "Test3",
-    "name": "Test3",
-    "age": "abc",
-    "position": "Test3",
-    "speciality": "Test3",
-    "address": "Test3",
-    "email": "Test3",
-    "password": "Test3",
-}).json())
-printSep()
-
-print(requests.post('http://localhost:5000/api/v2/users', json={
-    "surname": "Test4",
-    "age": "ab4",
-    "position": "Test4",
-    "speciality": "Test4",
-    "address": "Test4",
-    "email": "Test4",
-    "password": "Test4",
-}).json())
-printSep()
+    print(requests.post('http://localhost:5000/api/v2/users', json={
+        "surname": "Test4",
+        "age": "ab4",
+        "position": "Test4",
+        "speciality": "Test4",
+        "address": "Test4",
+        "email": "Test4",
+        "password": "Test4",
+    }).json())
+    printSep()
 
 
-print(requests.delete('http://localhost:5000/api/v2/users/9').json())
-printSep()
+    print(requests.delete('http://localhost:5000/api/v2/users/9').json())
+    printSep()
 
-jwt = requests.post('http://localhost:5000/api/login', json={
-    "email": "Test",
-    "password": "Test",
-}).json()["jwt"]
-print(jwt)
-printSep()
+    jwt = requests.post('http://localhost:5000/api/login', json={
+        "email": "Test",
+        "password": "Test",
+    }).json()["jwt"]
+    print(jwt)
+    printSep()
 
-print(requests.delete('http://localhost:5000/api/v2/users/9', headers={'Authorization': f'Bearer {jwt}'}).json())
-printSep()
+    print(requests.delete('http://localhost:5000/api/v2/users/9', headers={'Authorization': f'Bearer {jwt}'}).json())
+    printSep()
 
-print(requests.delete('http://localhost:5000/api/v2/users/1', headers={'Authorization': f'Bearer {jwt}'}).json())
-printSep()
+    print(requests.delete('http://localhost:5000/api/v2/users/1', headers={'Authorization': f'Bearer {jwt}'}).json())
+    printSep()
 
-print(requests.delete('http://localhost:5000/api/v2/users/1000', headers={'Authorization': f'Bearer {jwt}'}).json())
-printSep()
+    print(requests.delete('http://localhost:5000/api/v2/users/1000', headers={'Authorization': f'Bearer {jwt}'}).json())
+    printSep()
 
-print(requests.delete('http://localhost:5000/api/v2/users/abc', headers={'Authorization': f'Bearer {jwt}'}).json())
-printSep()
+    print(requests.delete('http://localhost:5000/api/v2/users/abc', headers={'Authorization': f'Bearer {jwt}'}).json())
+    printSep()
