@@ -7,6 +7,7 @@ from api import jobs_api
 from api import users_api
 from api import login_api
 from api import users_resource
+from api import jobs_resource
 from data.departments import Department
 from data.jobs import Jobs
 from data.users import User
@@ -32,6 +33,8 @@ def main():
     app.register_blueprint(users_api.blueprint)
     api.add_resource(users_resource.UsersListResource, '/api/v2/users')
     api.add_resource(users_resource.UsersResource, '/api/v2/users/<int:user_id>')
+    api.add_resource(jobs_resource.JobsListResource, '/api/v2/jobs')
+    api.add_resource(jobs_resource.JobsResource, '/api/v2/jobs/<int:job_id>')
     app.run()
 
 

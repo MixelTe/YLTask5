@@ -19,8 +19,8 @@ def get_job_or_abort(job_id):
 
 
 class JobsResource(Resource):
-    def get(self, user_id):
-        job, _ = get_job_or_abort(user_id)
+    def get(self, job_id):
+        job, _ = get_job_or_abort(job_id)
         return jsonify(
             {
                 'job': job.to_dict(only=Fields)
@@ -28,8 +28,8 @@ class JobsResource(Resource):
         )
 
     @jwt_required
-    def delete(self, user_id):
-        job, session = get_job_or_abort(user_id)
+    def delete(self, job_id):
+        job, session = get_job_or_abort(job_id)
         userId = get_jwt_identity()
         if (job.team_leader != userId and userId != 1):
             abort(403, message=f"Forbidden")
@@ -38,9 +38,9 @@ class JobsResource(Resource):
         return jsonify({'success': 'OK'})
 
     @jwt_required
-    def put(self, user_id):
+    def put(self, job_id):
         args = parser_noreq.parse_args()
-        job, session = get_job_or_abort(user_id)
+        job, session = get_job_or_abort(job_id)
         userId = get_jwt_identity()
         if (job.team_leader != userId and userId != 1):
             abort(403, message=f"Forbidden")
