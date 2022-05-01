@@ -65,6 +65,7 @@ def get_user(id):
 
 
 @blueprint.route('/api/users/<int:id>', methods=['DELETE'])
+@jwt_required
 def delete_user(id):
     db_sess = db_session.create_session()
     user = db_sess.query(User).get(id)
@@ -79,6 +80,7 @@ def delete_user(id):
 
 
 @blueprint.route('/api/users/<int:id>', methods=['PUT'])
+@jwt_required
 def edit_user(id):
     db_sess = db_session.create_session()
     user = db_sess.query(User).get(id)

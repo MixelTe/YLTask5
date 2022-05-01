@@ -1,6 +1,6 @@
 from flask import jsonify
 from flask_restful import reqparse, abort, Api, Resource
-from flask_jwt_simple import get_jwt_identity
+from flask_jwt_simple import jwt_required, get_jwt_identity
 from data import db_session
 from data.users import User
 
@@ -25,17 +25,17 @@ parser_noreq.add_argument("email")
 parser_noreq.add_argument("password")
 
 
-def get_user_or_abort(user_id) -> User:
+def get_user_or_abort(user_id):
     session = db_session.create_session()
-    user = session.query(User).get(user_id)
+    user: User = session.query(User).get(user_id)
     if not user:
         abort(404, message=f"User {user_id} not found")
-    return user
+    return user, session
 
 
 class UsersResource(Resource):
     def get(self, user_id):
-        user = get_user_or_abort(user_id)
+        user, _ = get_user_or_abort(user_id)
         fields = ("id", "surname", "name", "age", "position", "speciality", "address", "email")
         return jsonify(
             {
@@ -43,9 +43,9 @@ class UsersResource(Resource):
             }
         )
 
+    @jwt_required
     def delete(self, user_id):
-        user = get_user_or_abort(user_id)
-        session = db_session.create_session()
+        user, session = get_user_or_abort(user_id)
         userId = get_jwt_identity()
         if (user.id != userId and userId != 1):
             abort(403, message=f"Forbidden")
@@ -53,10 +53,10 @@ class UsersResource(Resource):
         session.commit()
         return jsonify({'success': 'OK'})
 
+    @jwt_required
     def put(self, user_id):
         args = parser_noreq.parse_args()
-        user = get_user_or_abort(user_id)
-        db_sess = db_session.create_session()
+        user, session = get_user_or_abort(user_id)
         userId = get_jwt_identity()
         if (user.id != userId and userId != 1):
             abort(403, message=f"Forbidden")
@@ -74,12 +74,12 @@ class UsersResource(Resource):
         if (args["address"] is not None):
             user.address = str(args["address"])
         if (args["email"] is not None):
-            if (db_sess.query(User).filter_by(email=str(args["email"]).first())):
+            if (session.query(User).filter_by(email=str(args["email"]).first())):
                 abort(400, message=f"Email address already taken")
             user.email = str(args["email"])
         if (args["password"] is not None):
             user.set_password(str(args["password"]))
-        db_sess.commit()
+        session.commit()
         return jsonify({'success': 'OK'})
 
 
